@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: prompt-router
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python app.py
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: MODEL_NAME
+        value: gpt-4o-mini
+      - key: CONFIDENCE_THRESHOLD
+        value: "0.7"

@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  prompt-router:
+    build: .
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    # We use a terminal-interactive TTY for the CLI if needed
+    stdin_open: true
+    tty: true
