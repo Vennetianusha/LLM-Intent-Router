@@ -1,66 +1,86 @@
-# LLM-Powered Prompt Router for Intent Classification
+# LLM Intent Router
 
-This project implements a sophisticated two-step AI service that intelligently routes user requests to specialized expert personas based on detected intent.
+This project is a simple AI-based service that routes user prompts to the correct expert response based on the detected intent.
 
-## Architecture
+The system uses a language model to analyze the user message and determine what type of request it is, such as coding help, data analysis, writing assistance, or career guidance.
 
-1.  **Classify**: A lightweight LLM call (using `gpt-4o-mini`) analyzes the user's message and returns a structured JSON object with the detected intent (`code`, `data`, `writing`, `career`, or `unclear`) and a confidence score.
-2.  **Route and Respond**: The system selects a specialized "Expert Persona" system prompt based on the intent. If the intent is below a confidence threshold (0.7) or is "unclear", it generates a clarifying question.
-3.  **Log**: Every interaction is logged to `route_log.jsonl` for observability.
+## How It Works
 
-### Error Handling & Troubleshooting
-- **Insufficient Quota (429)**: If you see this in the logs, it means your OpenAI account has an active key but no credits. You'll need to add a balance at [platform.openai.com](https://platform.openai.com/).
-- **Invalid API Key (401)**: Double-check that your `.env` file contains the correct key without quotes or extra spaces.
-- **JSON Parsing**: The system automatically defaults to an `"unclear"` intent if the LLM fails to provide a valid JSON structure.
+1. **Intent Detection**
+   - The user's prompt is analyzed using an LLM.
+   - The model returns the detected intent and a confidence score.
+
+2. **Prompt Routing**
+   - Based on the detected intent, the request is routed to a specific expert persona:
+     - Code Expert
+     - Data Expert
+     - Writing Expert
+     - Career Expert
+
+3. **Clarification**
+   - If the model is not confident enough, the system asks the user for clarification.
+
+4. **Logging**
+   - All requests and responses are stored in `route_log.jsonl` for tracking.
 
 ## Features
 
-- **Specialized Personas**: Focuses on Code, Data, Writing, and Careers.
-- **Robust Error Handling**: Gracefully handles malformed JSON and API errors.
-- **Manual Override**: Users can bypass classification using `@intent` (e.g., `@code fix my bug`).
-- **Confidence Thresholding**: Ensures high-quality routing by asking for clarification when uncertain.
+- Intent classification using LLM
+- Prompt routing to expert personas
+- Confidence-based clarification
+- Error handling for invalid responses
+- Interaction logging
 
-## Setup
+## Installation
 
-1.  **Install Dependencies**:
-    ```bash
-    pip install openai python-dotenv
-    ```
-2.  **Configure Environment**:
-    Create a `.env` file and add your OpenAI API key:
-    ```
-    OPENAI_API_KEY=your_actual_key_here
-    MODEL_NAME=gpt-4o-mini
-    CONFIDENCE_THRESHOLD=0.7
-    ```
+Install the required packages:
 
-## Usage
 
-### Interactive CLI
-Run the service in interactive mode:
-```bash
+pip install openai python-dotenv
+
+
+## Environment Setup
+
+Create a `.env` file and add your API key:
+
+
+OPENAI_API_KEY=your_api_key_here
+MODEL_NAME=gpt-4o-mini
+CONFIDENCE_THRESHOLD=0.7
+
+
+## Running the Project
+
+Start the interactive CLI:
+
+
 python main.py
-```
 
-### Batch Testing
-Run the 15 mandatory test cases:
-```bash
+
+Run the test cases:
+
+
 python main.py --test
-```
 
-### Docker Setup
-
-1.  **Build and Run with Docker Compose**:
-    ```bash
-    docker-compose up --build
-    ```
-    *Note: Ensure your `.env` file is populated with a valid API key.*
 
 ## Project Structure
 
-- `router.py`: Core routing logic and LLM orchestration.
-- `prompts.py`: Definitions for expert personas and classifier prompts.
-- `main.py`: CLI interface and batch test runner.
-- `route_log.jsonl`: Interaction logs.
-- `Dockerfile` & `docker-compose.yml`: Containerization files.
-- `.env.example`: Template for environment variables.
+
+router.py -> Routing and intent detection logic
+prompts.py -> Expert persona prompts
+main.py -> CLI interface
+app.py -> Service entry point
+route_log.jsonl -> Request logs
+Dockerfile -> Docker setup
+docker-compose.yml -> Container configuration
+
+
+## Technologies Used
+
+- Python
+- OpenAI API
+- Docker
+
+## Author
+
+Anusha Pavani Venneti
